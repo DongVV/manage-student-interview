@@ -3,6 +3,7 @@
 namespace App\Repositories\Student;
 
 use App\Models\Student;
+use App\Transformers\StudentTransformer;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
 use App\Http\Requests\StudentUpdateRequest;
@@ -18,7 +19,9 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function getStudents(Request $request)
     {
-        return Student::filterGrade($request->input('grade'))->paginate(10);
+        $students = Student::filterGrade($request->input('grade'))->paginate(10);
+
+        return fractal($students, new StudentTransformer)->parseIncludes('grade')->toArray();
     }
 
     /**
@@ -31,8 +34,9 @@ class StudentRepository implements StudentRepositoryInterface
     public function createStudent(StudentStoreRequest $request)
     {
         $data = $request->only(['name', 'age', 'grade_id']);
+        $student =  Student::create($data);
 
-        return Student::create($data);
+        return fractal($student, new StudentTransformer)->toArray();
     }
 
     /**
@@ -46,8 +50,9 @@ class StudentRepository implements StudentRepositoryInterface
     public function updateStudent(StudentUpdateRequest $request, Student $student)
     {
         $data = $request->only(['name', 'age', 'grade_id']);
+        $student->update($data);
 
-        return $student->update($data);
+        return fractal($student, new StudentTransformer)->toArray();
     }
 
     /**
