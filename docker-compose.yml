@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: manage_student_interview_php
+    working_dir: /var/www/html
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - net
+
+  db:
+    image: mysql:latest
+    container_name: manage_student_interview_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql/
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: manage_student_interview_db
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - net
+
+#Docker Networks
+networks:
+  net:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
