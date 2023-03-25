@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Repositories\Student\StudentRepository;
+use App\Repositories\Student\StudentRepositoryInterface;
 
 class StudentService
 {
@@ -15,9 +16,9 @@ class StudentService
     /**
      * construct
      *
-     * @param StudentRepository $studentRepository
+     * @param StudentRepositoryInterface $studentRepository
      */
-    public function __construct(StudentRepository $studentRepository)
+    public function __construct(StudentRepositoryInterface $studentRepository)
     {
         $this->studentRepository = $studentRepository;
     }
